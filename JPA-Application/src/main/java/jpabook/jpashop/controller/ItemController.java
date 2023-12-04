@@ -63,16 +63,21 @@ public class ItemController {
     }
 
     @PostMapping("/items/{itemId}/edit")
-    public String updateItem(@PathVariable("itemId") String itemId, @ModelAttribute("form") BookForm form) {
-        Book book = new Book();
-        book.setId(form.getId());
-        book.setName(form.getName());
-        book.setPrice(form.getPrice());
-        book.setStockQuantity(form.getStockQuantity());
-        book.setAuthor(form.getAuthor());
-        book.setIsbn(form.getIsbn());
+    public String updateItem(@PathVariable("itemId") Long itemId, @ModelAttribute("form") BookForm form) {
+//        Book book = new Book();
+//        book.setId(form.getId());
+//        book.setName(form.getName());
+//        book.setPrice(form.getPrice());
+//        book.setStockQuantity(form.getStockQuantity());
+//        book.setAuthor(form.getAuthor());
+//        book.setIsbn(form.getIsbn());
 
-        itemService.saveItem(book);
+//        itemService.saveItem(book);
+
+        //더 나은 설계: 컨트롤러에서 어설프게 엔티티를 생성하지말고, 트랜잭션이 있는 서비스 계층에
+        //식별자(id)와 변경할 데이터를 명확하게 전달하자.
+        itemService.updateItem(itemId, form.getName(), form.getPrice(), form.getStockQuantity());
+
         return "redirect:/items";
     }
 }
