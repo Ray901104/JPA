@@ -4,9 +4,25 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+/*@SequenceGenerator(
+        name = "MEMBER_SEQ_GENERATOR",
+        sequenceName = "MEMBER_SEQ", //매핑할 데이터베이스 시퀀스 이름
+        initialValue = 1, allocationSize = 1) //테이블안에서 시퀀스 매핑*/
+/*@TableGenerator(
+        name = "MEMBER_SEQ_GENERATOR",
+        table = "MY_SEQUENCES",
+        pkColumnValue = "MEMBER_SEQ", allocationSize = 1)*/
 public class Member {
 
     @Id
+    //@GeneratedValue(strategy = GenerationType.AUTO) //(디폴트)DB 방언에 맞춰서 자동으로 생성된다.
+    //@GeneratedValue(strategy = GenerationType.IDENTITY) //기본키 생성을 DB에 위임 ex) MYSQL
+    /*@GeneratedValue(strategy =
+            GenerationType.SEQUENCE,
+            generator = "MEMBER_SEQ_GENERATOR")*/ //Oracle 등에서 사용하는 시퀀스
+    /*@GeneratedValue(
+            strategy = GenerationType.TABLE,
+            generator = "MEMBER_SEQ_GENERATOR")*/ //키 생성 전용 테이블을 하나 만들어서 DB 시퀀스 흉내내는 전략
     private Long id;
 
     @Column(name = "name")

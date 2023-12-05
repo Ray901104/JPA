@@ -16,6 +16,11 @@ public class PersistenceContextTest {
         tx.begin();
 
         try {
+            //테스트
+            Member member = new Member();
+            member.setUsername("A");
+            em.persist(member);
+
             //select 쿼리가 한 번만 실행된다.
             Member member1 = em.find(Member.class, 10L); //DB에서 최초 조회 -> 영속성 컨텍스트 1차 캐시에 저장
             Member member2 = em.find(Member.class, 10L); //두 번째 부터는 1차 캐시에서 조회
