@@ -17,10 +17,10 @@ public class JpaMain {
 
         try {
             //insert
-            Member member = new Member();
-            member.setId(1L);
-            member.setName("HelloA");
-            em.persist(member);
+//            Member member = new Member();
+//            member.setId(1L);
+//            member.setName("HelloA");
+//            em.persist(member);
 
             //select
             Member foundMember = em.find(Member.class, 1L);
@@ -30,7 +30,7 @@ public class JpaMain {
                     .getResultList(); //JPQL
 
             //update
-            foundMember.setName("HelloJPA"); //이렇게만 해두면 업데이트가 된다 <- JPA 변경감지!
+            //foundMember.setName("HelloJPA"); //이렇게만 해두면 업데이트가 된다 <- JPA 변경감지!
 
             //remove
             em.remove(foundMember);
