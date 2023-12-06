@@ -49,7 +49,13 @@ public class MemberV2 {
         return team;
     }
 
-    public void setTeam(Team team) {
+    /**
+     * 연관관계 편의 메서드
+     * 보통 관계를 맺는 객체 중 하나를 선택하는 것이 좋다.
+     * @param team
+     */
+    public void changeTeam(Team team) {
         this.team = team;
+        team.getMembers().add(this);
     }
 }
