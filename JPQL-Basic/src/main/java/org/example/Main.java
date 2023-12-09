@@ -62,8 +62,27 @@ public class Main {
             System.out.println("memberDTO.username = " + memberDTO.getUsername());
             System.out.println("memberDTO.age = " + memberDTO.getAge());
 
-            Member foundMember = result.get(0);
-            foundMember.setAge(20);
+            /**
+             * 페이징 API
+             */
+            for (int i = 0; i < 100; i++) {
+                Member member1 = new Member();
+                member1.setUsername("member" + i);
+                member1.setAge(i);
+                em.persist(member1);
+            }
+
+            em.flush();
+            em.clear();
+
+            List<Member> resultPaging = em.createQuery("select m from Member m order by m.age desc", Member.class)
+                    .setFirstResult(0)
+                    .setMaxResults(10)
+                    .getResultList();
+
+            for (Member member1 : resultPaging) {
+                System.out.println("member1 = " + member1);
+            }
 
             tx.commit();
         } catch (Exception e) {
