@@ -1,6 +1,9 @@
 package org.example;
 
+import org.example.jpql.Address;
 import org.example.jpql.Member;
+import org.example.jpql.MemberDTO;
+import org.example.jpql.Team;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,22 +22,48 @@ public class Main {
             member.setAge(10);
             em.persist(member);
 
-            /*
-             * JPQL start
+            em.flush();
+            em.clear();
+
+            List<Member> result = em.createQuery("select m from Member m", Member.class)
+                    .getResultList(); //엔티티 조회
+
+            List<Team> resultTeam = em.createQuery("select t from Member m join m.team t", Team.class)
+                    .getResultList(); //join을 명시해주자(명시안해도 join이 나감)
+
+            List<Address> resultAddress = em.createQuery("select o.address from Order o", Address.class)
+                    .getResultList(); //embedded
+
+            /**
+             * 반환타입이 명시적이지 않을 때 사용
              */
-            TypedQuery<Member> typedQuery = em.createQuery("select m from Member m", Member.class); //타입을 특정할 수 있을 때
-            Query query = em.createQuery("select m.username, m.age from Member m"); //타입을 특정할 수 없을 때
+            //첫번째 방법
+            List resultScala = em.createQuery("select distinct m.username, m.age from Member m")
+                    .getResultList(); //distinct + scala
 
-            //get result
-            List<Member> typedQueryResultList = typedQuery.getResultList();
-            Member typedQuerySingleResult = typedQuery.getSingleResult(); //데이터가 하나만 나올 것이 확실한 경우, 없거나 둘 이상이면 예외 발생
-            List queryResultList = query.getResultList();
+            Object o = resultScala.get(0);
+            Object[] objects = (Object[]) o;
+            System.out.println("objects[0] = " + objects[0]); //username
+            System.out.println("objects[1] = " + objects[1]); //age
 
-            //parameter binding
-            TypedQuery<Member> typedQuery2 = em.createQuery("select m from Member m where m.username = :username", Member.class);
-            typedQuery2.setParameter("username", "memberA");
-            Member singleResult = typedQuery2.getSingleResult();
-            System.out.println("singleResult = " + singleResult.getClass());
+            //두번째 방법
+            List<Object[]> resultScala2 = em.createQuery("select distinct m.username, m.age from Member m")
+                    .getResultList();//distinct + scala
+
+            Object[] objects1 = resultScala2.get(0);
+            System.out.println("objects1[0] = " + objects1[0]);
+            System.out.println("objects1[1] = " + objects1[1]);
+
+            //세번째 방법 -> 가장 권장하는 방법!
+            List<MemberDTO> memberDTOS = em.createQuery("select new org.example.jpql.MemberDTO(m.username, m.age) from Member m", MemberDTO.class)
+                    .getResultList();
+
+            MemberDTO memberDTO = memberDTOS.get(0);
+            System.out.println("memberDTO.username = " + memberDTO.getUsername());
+            System.out.println("memberDTO.age = " + memberDTO.getAge());
+
+            Member foundMember = result.get(0);
+            foundMember.setAge(20);
 
             tx.commit();
         } catch (Exception e) {
