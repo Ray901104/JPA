@@ -74,6 +74,45 @@ public class Main {
                 System.out.println("objects[2] = " + objects[2]);
             }
 
+            //case
+            String qlString7 = "select " +
+                    "    case when m.age <= 10 then '학생요금'" +
+                    "         when m.age >= 60 then '경로요금'" +
+                    "         else '일반요금'" +
+                    "    end     " +
+
+                    "from Member m";
+            List<String> resultList = em.createQuery(qlString7, String.class)
+                    .getResultList();
+
+            for (String s : resultList) {
+                System.out.println("s = " + s);
+            }
+
+            //coalesce
+            Member member2 = new Member();
+            member2.setUsername(null);
+            em.persist(member2);
+
+            String qlString8 = "select coalesce(m.username, '이름 없는 회원') from Member m where m.id = 3";
+            String singleResult = em.createQuery(qlString8, String.class)
+                    .getSingleResult();
+
+            System.out.println("singleResult = " + singleResult); //username이 null이면 이름 없는 회원 반환
+
+            //nullif: 사용자 이름이 '관리자'면 null을 반환하고 나머지는 원 데이터를 반환
+            Member member3 = new Member();
+            member3.setUsername("관리자");
+            em.persist(member3);
+
+            String qlString9 = "select nullif(m.username, '관리자') from Member m";
+            List<String> resultList1 = em.createQuery(qlString9, String.class)
+                    .getResultList();
+
+            for (String s : resultList1) {
+                System.out.println("s = " + s);
+            }
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
