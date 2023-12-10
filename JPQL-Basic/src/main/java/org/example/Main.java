@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.jpql.Member;
+import org.example.jpql.MemberType;
 import org.example.jpql.Team;
 
 import javax.persistence.EntityManager;
@@ -29,6 +30,7 @@ public class Main {
             member1.setUsername("member1");
             member1.setAge(10);
             member1.setTeam(team);
+            member1.setType(MemberType.ADMIN);
             em.persist(member1);
 
             em.flush();
@@ -58,6 +60,19 @@ public class Main {
             String qlString5 = "select m from Member m left join Team t on m.username = t.name";
             List<Member> resultFilterOuterJoin = em.createQuery(qlString5, Member.class)
                     .getResultList();
+
+            //JPQL 타입표현
+            String qlString6 = "select m.username, 'HELLO', TRUE from Member m" +
+                    " where m.type = :userType";
+            List<Object[]> resultType = em.createQuery(qlString6)
+                    .setParameter("userType", MemberType.ADMIN)
+                    .getResultList();
+
+            for (Object[] objects : resultType) {
+                System.out.println("objects[0] = " + objects[0]);
+                System.out.println("objects[1] = " + objects[1]);
+                System.out.println("objects[2] = " + objects[2]);
+            }
 
             tx.commit();
         } catch (Exception e) {
