@@ -48,6 +48,7 @@ public class FetchJoinMain {
             em.flush();
             em.clear();
 
+            //String query = "select t from Team t";
             //String query = "select m from Member m";
             //String query = "select m from Member m join fetch m.team"; //한방 쿼리
             //String query = "select t from Team t join fetch t.members"; //컬렉션 패치조인 -> 중복 결과 발생

@@ -1,5 +1,7 @@
 package org.example.jpql;
 
+import org.hibernate.annotations.BatchSize;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,7 @@ public class Team {
 
     private String name;
 
+    //@BatchSize(size = 100) //N+1 문제 해결 -> 보통 글로벌로 설정
     @OneToMany(mappedBy = "team")
     private List<Member> members = new ArrayList<>();
 
