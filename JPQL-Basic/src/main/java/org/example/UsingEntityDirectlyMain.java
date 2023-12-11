@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class UsingEntityDirectlyMain {
     public static void main(String[] args) {
@@ -57,6 +58,15 @@ public class UsingEntityDirectlyMain {
                     .getSingleResult();
 
             System.out.println("foundMember = " + foundMember);
+
+            //named query: 애플리케이션 로딩 시점에 검증 및 초기화 <- 굉장한 이점!
+            List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
+                    .setParameter("username", "회원1")
+                    .getResultList();
+
+            for (Member member : resultList) {
+                System.out.println("member = " + member);
+            }
 
             tx.commit();
         } catch (Exception e) {
