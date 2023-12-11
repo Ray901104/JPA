@@ -16,12 +16,13 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    @NotEmpty // 문제!
+    @NotEmpty //문제!
     private String name;
 
     @Embedded
     private Address address;
 
+    //@JsonIgnore //문제!
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 }
