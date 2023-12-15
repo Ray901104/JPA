@@ -12,7 +12,7 @@ import lombok.*;
         query = "select m from Member m where m.username = :username"
 )
 @NamedEntityGraph(name = "Member.all", attributeNodes = @NamedAttributeNode("team")) //EntityGraph의 JPA 표준 스펙
-public class Member extends JpaBaseEntity {
+public class Member extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "member_id")
