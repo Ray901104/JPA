@@ -1,5 +1,7 @@
 package spring.datajpa.repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +28,7 @@ class MemberRepositoryTest {
 
     @Autowired MemberRepository memberRepository;
     @Autowired TeamRepository teamRepository;
+    @PersistenceContext EntityManager entityManager;
 
     @Test
     void testMember() {
@@ -220,5 +223,29 @@ class MemberRepositoryTest {
         assertThat(slice.getNumber()).isEqualTo(0);
         assertThat(slice.isFirst()).isTrue();
         assertThat(slice.hasNext()).isTrue();
+    }
+
+    @Test
+    void bulkAgePlusTest() {
+        //given
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 19));
+        memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 21));
+        memberRepository.save(new Member("member5", 40));
+
+        //when
+        int resultCount = memberRepository.bulkAgePlus(20); //영속성 컨텍스트에서 벌크연산을 인식하지 못하고 DB에 반영된다.
+
+        //벌크연산 이후에는 가급적 영속성 컨텍스트를 초기화 하는 것이 좋다.
+//        entityManager.flush();
+//        entityManager.clear();
+
+        List<Member> result = memberRepository.findByUsername("member5");
+        Member member5 = result.get(0);
+        System.out.println("member5.getAge() = " + member5.getAge()); //40 -> DB와 데이터 정합성 깨진다.
+
+        //then
+        assertThat(resultCount).isEqualTo(3);
     }
 }
