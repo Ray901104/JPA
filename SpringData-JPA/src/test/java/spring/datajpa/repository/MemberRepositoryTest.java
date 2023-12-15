@@ -11,6 +11,7 @@ import spring.datajpa.entity.Team;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -155,5 +156,18 @@ class MemberRepositoryTest {
         }
 
         assertThat(members.size()).isEqualTo(2);
+    }
+
+    @Test
+    void returnTypeTest() {
+        Member member1 = new Member("AAA", 10);
+        Member member2 = new Member("BBB", 20);
+
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        List<Member> aaa = memberRepository.findListByUsername("AAA");
+        Member aaa1 = memberRepository.findMemberByUsername("AAA");
+        Optional<Member> aaa2 = memberRepository.findOptionalMemberByUsername("AAA");
     }
 }
