@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.querydsl.entity.Member;
-import study.querydsl.entity.QMember;
 import study.querydsl.entity.Team;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static study.querydsl.entity.QMember.member;
 
 @SpringBootTest
 @Transactional
@@ -56,12 +56,13 @@ public class QuerydslBasicTest {
 
     @Test
     void startQuerydsl() {
-        QMember m = new QMember("m");
+        //QMember m = new QMember("m");
+        //QMember m = QMember.member;
 
         Member foundMember = jpaQueryFactory
-                .select(m)
-                .from(m)
-                .where(m.username.eq("member1")) //파라미터 바인딩 처리
+                .select(member) //static import -> 권장
+                .from(member)
+                .where(member.username.eq("member1")) //파라미터 바인딩 처리
                 .fetchOne();
 
         assertThat(foundMember.getUsername()).isEqualTo("member1");
