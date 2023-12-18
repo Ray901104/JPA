@@ -67,4 +67,26 @@ public class QuerydslBasicTest {
 
         assertThat(foundMember.getUsername()).isEqualTo("member1");
     }
+
+    @Test
+    void search() {
+        Member foundMember = jpaQueryFactory
+                .selectFrom(member)
+                .where(member.username.eq("member1").and(member.age.eq(10)))
+                .fetchOne();
+
+        assertThat(foundMember.getUsername()).isEqualTo("member1");
+    }
+
+    @Test
+    void searchAndParam() {
+        Member foundMember = jpaQueryFactory
+                .selectFrom(member)
+                .where(
+                        member.username.eq("member1"),
+                        member.age.eq(10))
+                .fetchOne();
+
+        assertThat(foundMember.getUsername()).isEqualTo("member1");
+    }
 }
